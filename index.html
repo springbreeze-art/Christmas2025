@@ -12,47 +12,51 @@
         }
         #main { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
         
-        /* 视频层 */
-        #video1 { width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        /* 1. 视频层 */
+        #video1 { 
+            width: 100%; height: 100%; object-fit: cover; 
+            position: absolute; top: 0; left: 0; z-index: 10; 
+        }
+        
+        /* 2. 静态背景层 (远景图) */
+        #static-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* 引用您的 tree.jpg */
+            background: url('tree.jpg') no-repeat center center; 
+            background-size: cover; 
+            z-index: 5; 
+            display: none; /* 初始隐藏 */
+        }
 
-        /* 播放按钮 */
-        #play-btn {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 999; background: rgba(200, 0, 0, 0.9); color: white;
-            padding: 15px 30px; border: 2px solid #fff; border-radius: 50px;
-            font-size: 1.5rem; cursor: pointer; box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
+        /* 音乐层 */
         .hidden { display: none !important; opacity: 0; }
 
-        /* === 新增：树顶公司名称 === */
+        /* === 3. 树顶公司名称 (PSCPCB) === */
         #company-title {
             position: fixed;
-            /* 【重要】需要根据视频里星星的实际位置调整这里的 top 值 */
-            top: 15%; 
-            left: 50%;
+            /* 位置调整：顶部 18% 左右 */
+            top: 18%; 
+            left: 50.5%; 
             transform: translateX(-50%);
-            z-index: 150; /* 保证在最上层 */
-            color: #fff; /* 亮白色 */
-            font-family: "Arial Black", sans-serif;
-            font-size: 2em;
+            z-index: 100; 
+            
+            color: #ffff00; /* 亮黄色 */
+            font-family: "Arial Black", sans-serif; 
+            font-size: 1.8em; 
             letter-spacing: 2px;
-            text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00; /* 金色发光 */
-            opacity: 0; /* 初始隐藏 */
-            transition: opacity 2s ease-in;
+            
+            /* 发光特效 */
+            text-shadow: 0 0 10px #ffff00, 0 0 20px #ff0000, 0 0 30px #ffff00;
+            
+            opacity: 0; 
+            transition: opacity 1s ease-in;
         }
         #company-title.show { opacity: 1; }
 
-
-        /* === 新增：CSS人工造雪层 (覆盖在暂停的视频上) === */
+        /* === 4. 人工造雪层 === */
         #snow-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 50; display: none; /* 初始不显示 */
+            pointer-events: none; z-index: 50; display: none;
         }
         .snowflake {
             position: absolute; top: -10px; color: #fff; user-select: none;
@@ -60,49 +64,49 @@
         }
         @keyframes fall { to { transform: translateY(105vh); } }
 
-
-        /* === 祝福语区域 === */
+        /* === 5. 右侧祝福语 === */
         #greetings-container {
-            position: fixed; top: 25%; right: 5%; width: 35%;
+            position: fixed; 
+            top: 30%; 
+            right: 5%; 
+            width: 38%;
             z-index: 100; text-align: right; pointer-events: none;
         }
         .christmas-font { font-family: "Brush Script MT", "Comic Sans MS", cursive, serif; }
 
-        /* 通用文字样式 */
-        .greeting-text {
-            opacity: 0; /* 初始隐藏，由动画控制显示 */
-        }
+        .greeting-text { opacity: 0; }
 
-        /* 第一排大字：流光效果 + 先显示 */
+        /* 第一排：Merry Christmas (流光效果) */
         .greetings-title {
-            font-size: 2.8em; margin: 0 0 15px 0; font-weight: bold;
-            /* 流光背景设置 */
-            background: linear-gradient(to right, #ff3333 20%, #ffff00 50%, #ff3333 80%);
+            font-size: 2.5em; margin: 0 0 15px 0; font-weight: bold;
+            color: #ff3333; 
+            background: linear-gradient(to right, #ff3333 30%, #fff 50%, #ff3333 70%);
             background-size: 200% auto;
-            color: #ff3333; /* 回退颜色 */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            /* 两个动画：1.淡入 2.流光闪烁 */
-            animation: fadeInMove 1.5s forwards, shimmer 3s linear infinite;
-            animation-delay: 0.5s; /* 延迟0.5秒出现 */
+            animation: fadeInMove 1s forwards, shimmer 3s infinite linear;
+            animation-delay: 0.2s;
         }
 
-        /* 第二排小字：普通发光 + 后显示 */
+        /* 第二排：祝福语 (呼吸效果) */
         .greetings-body {
-            font-size: 1.3em; line-height: 1.6; color: #f0f0f0;
+            font-size: 1.1em; line-height: 1.6; color: #f0f0f0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9); font-weight: normal;
-            /* 动画：淡入 */
-            animation: fadeInMove 2s forwards;
-            animation-delay: 2s; /* 比标题晚1.5秒出现 */
+            animation: fadeInMove 2s forwards, breathe 4s infinite ease-in-out;
+            animation-delay: 1.5s;
         }
         
+        /* 名字高亮颜色 */
         .highlight-name { color: #00ffcc; font-weight: bold; }
 
-        /* 文字流光闪烁动画 */
-        @keyframes shimmer {
-            to { background-position: 200% center; }
+        @keyframes shimmer { 
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
         }
-        /* 文字淡入位移动画 */
+        @keyframes breathe {
+            0%, 100% { text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            50% { text-shadow: 0 0 15px rgba(255,255,255,0.8); }
+        }
         @keyframes fadeInMove {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -111,60 +115,64 @@
 </head>
 
 <body id="app">
-    <div id="play-btn">👉 点击开启圣诞祝福 👈</div>
-
     <div id="main">
         <video id="video1" muted autoplay playsinline>
             <source src="chrismas.mp4" type="video/mp4">
         </video>
+
+        <div id="static-bg"></div>
         
         <audio id="music1" loop preload="auto" class="hidden">
             <source src="jinniandongtianpeizhewoba.mp3" type="audio/mpeg">
         </audio>
 
         <div id="company-title">PSCPCB</div>
-
+        
         <div id="snow-overlay"></div>
 
         <div id="greetings-container" class="hidden">
+            
             <div id="text-en" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Spring</span> wishes you and your family happiness, health, and a happy New Year.
+                    <span class="highlight-name">Spring</span> wishes you and your family health and happiness! May the coming New Year be filled with joy.
                 </div>
             </div>
+
             <div id="text-ru" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Леха</span> желает вам и вашей семье счастья, здоровья и счастливого Нового года.
+                    <span class="highlight-name">Леха</span> желает вам и вашей семье здоровья и счастья! Пусть наступающий Новый год будет радостным!
                 </div>
             </div>
+
             <div id="text-es" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Spring</span> les desea a usted y a su familia felicidad, salud y un próspero Año Nuevo.
+                    <span class="highlight-name">Spring</span> le desea mucha salud y felicidad a usted y a su familia. ¡Que el Año Nuevo que se avecina esté lleno de alegría!
                 </div>
             </div>
+
             <div id="text-pt" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Spring</span> deseja a você e sua família felicidade, saúde e um feliz Ano Novo.
+                    <span class="highlight-name">Spring</span> deseja saúde e felicidade a você e à sua família! Que o Ano Novo que se aproxima seja repleto de alegria!
                 </div>
             </div>
+
         </div>
     </div>
 
 <script>
-    // === 核心配置 ===
-    // 【重要】请修改这里！设置视频定格的时间点（秒）
-    // 当视频播放到这一秒时，画面会暂停，文字出现。
+    // === 核心设置 ===
+    // 触发切换的时间 (秒)
     var triggerTime = 5; 
     // ================
 
     var video = document.getElementById("video1");
     var audio = document.getElementById("music1");
+    var staticBg = document.getElementById("static-bg");
     var container = document.getElementById("greetings-container");
-    var playBtn = document.getElementById("play-btn");
     var companyTitle = document.getElementById("company-title");
     var snowOverlay = document.getElementById("snow-overlay");
     var hasTriggered = false;
@@ -172,63 +180,58 @@
     const urlParams = new URLSearchParams(window.location.search);
     const lang = urlParams.get('lang') || 'en';
 
-    // 1. 点击按钮开始
-    playBtn.addEventListener('click', function() {
-        playBtn.style.display = 'none';
-        audio.play().catch(e => alert("音乐播放失败，请检查文件名"));
-        video.play();
-        // 创建雪花
-        createSnow();
-    });
+    // 隐形音乐开关：触摸或点击屏幕任意位置播放音乐
+    function enableAudio() {
+        if (audio.paused) {
+            audio.play().catch(e => console.log("Waiting for interaction"));
+        }
+    }
+    document.body.addEventListener('click', enableAudio, { once: true });
+    document.body.addEventListener('touchstart', enableAudio, { once: true });
 
-    // 2. 监听视频进度，触发定格效果
     video.addEventListener("timeupdate", function() {
-        // 当到达设定时间，并且还没触发过时
         if (!hasTriggered && video.currentTime >= triggerTime) {
-            // A. 暂停视频画面（定格）
-            video.pause(); 
             
-            // B. 显示公司名
+            // 1. 隐藏视频
+            video.style.display = 'none'; 
+            
+            // 2. 显示静态背景 tree.jpg
+            staticBg.style.display = 'block'; 
+            
+            // 3. 启动所有特效
             companyTitle.classList.add("show");
-
-            // C. 显示人工雪花层（让背景雪继续动）
             snowOverlay.style.display = "block";
-
-            // D. 显示祝福文字
-            showText(lang);
+            createSnow(); 
+            showText(lang); 
             
-            // 标记已触发，防止重复执行
-            hasTriggered = true;
+            hasTriggered = true; 
         }
     });
 
-    // 显示文字函数
     function showText(langCode) {
         document.querySelectorAll('.greeting-wrapper').forEach(el => el.classList.add('hidden'));
         var target = document.getElementById('text-' + langCode);
         if (!target) target = document.getElementById('text-en');
         container.classList.remove('hidden');
         target.classList.remove('hidden');
-        // 这里不需要加 fade-in 类了，因为动画直接写在了 CSS 的子元素上
     }
 
-    // 创建 CSS 雪花函数
     function createSnow() {
-        const snowflakesCount = 50; // 雪花数量
+        const snowflakesCount = 60; 
         for (let i = 0; i < snowflakesCount; i++) {
             let flake = document.createElement("div");
             flake.className = "snowflake";
-            flake.innerHTML = "❄"; // 可以换成 "." 或其他字符
+            flake.innerHTML = "❄";
             flake.style.left = Math.random() * 100 + "vw";
-            flake.style.fontSize = (Math.random() * 10 + 10) + "px"; // 大小随机
-            flake.style.opacity = Math.random(); // 透明度随机
-            flake.style.animationDuration = (Math.random() * 3 + 2) + "s"; // 下落速度随机
-            flake.style.animationDelay = Math.random() * 2 + "s"; // 延迟随机
+            flake.style.fontSize = (Math.random() * 10 + 10) + "px";
+            flake.style.opacity = Math.random(); 
+            flake.style.animationDuration = (Math.random() * 3 + 2) + "s"; 
+            flake.style.animationDelay = Math.random() * 2 + "s"; 
             snowOverlay.appendChild(flake);
         }
     }
-
-    // 调整：去掉了视频循环 seeking 的监听，因为触发后视频就暂停了，不需要重置。
+    
+    video.play().catch(e => console.log("等待交互播放"));
 </script>
 </body>
 </html>
