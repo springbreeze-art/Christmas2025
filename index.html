@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 基础设置 */
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: #000;
+        }
+
+        #main {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #video1 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .hidden {
+            display: none !important;
+            opacity: 0;
+        }
+
+        /* --- 祝福语区域 --- */
+        #greetings-container {
+            position: fixed;
+            top: 20%; 
+            right: 5%;
+            width: 30%; 
+            z-index: 100;
+            text-align: right; 
+            pointer-events: none; 
+        }
+
+        .christmas-font {
+            font-family: "Brush Script MT", "Comic Sans MS", cursive, serif;
+        }
+
+        .greetings-title {
+            font-size: 2.2em; 
+            margin: 0 0 10px 0;
+            color: #ff3333; 
+            text-shadow: 0 0 5px rgba(255, 255, 0, 0.8); 
+            font-weight: bold;
+        }
+
+        .greetings-body {
+            font-size: 1em; 
+            line-height: 1.5;
+            color: #f0f0f0; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9); 
+            font-weight: normal;
+        }
+
+        .highlight-name {
+            color: #00ffcc; 
+            font-weight: bold;
+        }
+
+        .fade-in {
+            animation: fadeInAnimation 3s forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body id="app">
+    <div id="main">
+        <video id="video1" muted autoplay loop playsinline>
+            <source src="chrismas.mp4" type="video/mp4">
+        </video>
+        
+        <audio id="music1" loop preload="auto" class="hidden">
+            <source src="jinniandongtianpeizhewoba.mp3" type="audio/mpeg">
+        </audio>
+
+        <div id="greetings-container" class="hidden">
+            <div id="text-en" class="greeting-wrapper hidden">
+                <div class="christmas-font greetings-title">Merry Christmas!</div>
+                <div class="greetings-body">
+                    <span class="highlight-name">Spring</span> wishes you and your family happiness, health, and a happy New Year.
+                </div>
+            </div>
+            <div id="text-ru" class="greeting-wrapper hidden">
+                <div class="christmas-font greetings-title">Merry Christmas!</div>
+                <div class="greetings-body">
+                    <span class="highlight-name">Леха</span> желает вам и вашей семье счастья, здоровья и счастливого Нового года.
+                </div>
+            </div>
+            <div id="text-es" class="greeting-wrapper hidden">
+                <div class="christmas-font greetings-title">Merry Christmas!</div>
+                <div class="greetings-body">
+                    <span class="highlight-name">Spring</span> les desea a usted y a su familia felicidad, salud y un próspero Año Nuevo.
+                </div>
+            </div>
+            <div id="text-pt" class="greeting-wrapper hidden">
+                <div class="christmas-font greetings-title">Merry Christmas!</div>
+                <div class="greetings-body">
+                    <span class="highlight-name">Spring</span> deseja a você e sua família felicidade, saúde e um feliz Ano Novo.
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // === 配置区域 ===
+    // 【记得修改这里！】星星亮起的秒数
+    var triggerTime = 8.5; 
+    // ================
+
+    var video = document.getElementById("video1");
+    var audio = document.getElementById("music1");
+    var container = document.getElementById("greetings-container");
+    var hasTriggered = false;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const lang = urlParams.get('lang') || 'en';
+
+    video.addEventListener("timeupdate", function() {
+        if (!hasTriggered && video.currentTime >= triggerTime) {
+            showText(lang);
+            hasTriggered = true;
+        }
+    });
+
+    video.addEventListener("seeking", function() {
+        if (video.currentTime < triggerTime) {
+            container.classList.add("hidden");
+            hasTriggered = false;
+        }
+    });
+
+    function showText(langCode) {
+        document.querySelectorAll('.greeting-wrapper').forEach(el => {
+            el.classList.add('hidden');
+            el.classList.remove('fade-in');
+        });
+        var target = document.getElementById('text-' + langCode);
+        if (!target) target = document.getElementById('text-en');
+        container.classList.remove('hidden');
+        target.classList.remove('hidden');
+        target.classList.add('fade-in');
+    }
+
+    function playMusic() {
+        audio.play().then(() => {
+            document.removeEventListener('click', playMusic);
+            document.removeEventListener('touchstart', playMusic);
+        }).catch(e => console.log("Waiting"));
+    }
+    
+    video.play().catch(() => console.log("Video autoplay blocked"));
+    
+    document.addEventListener('click', playMusic);
+    document.addEventListener('touchstart', playMusic);
+</script>
+</body>
+</html>
