@@ -18,7 +18,7 @@
             position: absolute; top: 0; left: 0; z-index: 10; 
         }
         
-        /* 2. 静态背景层 (确保 GitHub 有 tree.jpg) */
+        /* 2. 静态背景层 (必须保证 GitHub 有 tree.jpg) */
         #static-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('tree.jpg') no-repeat center center; 
@@ -70,7 +70,7 @@
 
         .greeting-text { opacity: 0; }
 
-        /* 第一排：Merry Christmas */
+        /* 第一排：标题 (流光效果) */
         .greetings-title {
             font-size: 2.5em; margin: 0 0 15px 0; font-weight: bold;
             color: #ff3333; 
@@ -82,7 +82,7 @@
             animation-delay: 0.2s;
         }
 
-        /* 第二排：祝福语 */
+        /* 第二排：正文 (呼吸效果) */
         .greetings-body {
             font-size: 1.1em; line-height: 1.6; color: #f0f0f0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9); font-weight: normal;
@@ -152,13 +152,20 @@
                 </div>
             </div>
 
+            <div id="text-ua" class="greeting-wrapper hidden">
+                <div class="christmas-font greetings-title greeting-text">З Різдвом!</div>
+                <div class="greetings-body greeting-text">
+                    <span class="highlight-name">Spring</span> бажає вам і вашій родині миру, сил та безпеки. Нехай Новий рік принесе надію та світло!
+                </div>
+            </div>
+
         </div>
     </div>
 
 <script>
-    // === 配置 ===
+    // === 核心配置 ===
     var triggerTime = 5; 
-    // ============
+    // ================
 
     var video = document.getElementById("video1");
     var audio = document.getElementById("music1");
@@ -168,7 +175,7 @@
     var snowOverlay = document.getElementById("snow-overlay");
     var hasTriggered = false;
 
-    // 参数识别：?spring=ru / ?spring=es / ?spring=pt
+    // 参数识别：?spring=ru / es / pt / ua
     const urlParams = new URLSearchParams(window.location.search);
     const lang = urlParams.get('spring') || 'en';
 
@@ -177,6 +184,7 @@
             audio.play().catch(e => console.log("Waiting"));
         }
     }
+    // 隐形开关：任意点击播放音乐
     document.body.addEventListener('click', enableAudio, { once: true });
     document.body.addEventListener('touchstart', enableAudio, { once: true });
 
