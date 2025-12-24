@@ -12,42 +12,49 @@
         }
         #main { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
         
-        /* 视频层 */
-        #video1 { width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: opacity 0.5s; }
+        /* 1. 视频层 (初始显示) */
+        #video1 { 
+            width: 100%; height: 100%; object-fit: cover; 
+            position: absolute; top: 0; left: 0; z-index: 10; 
+        }
         
-        /* === 新增：静态背景层 (用于完美展示远景) === */
+        /* 2. 静态背景层 (初始隐藏，触发后显示) */
+        /* 这里就是您的远景图，必须保证文件名 tree.jpg 正确 */
         #static-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* 这里引用您上传的图片 */
-            background-image: url('tree.jpg'); 
+            background: url('tree.jpg') no-repeat center center; 
             background-size: cover; 
-            background-position: center;
-            z-index: 2; /* 在视频上面 */
-            display: none; /* 初始隐藏 */
+            z-index: 5; /* 层级低于视频，但视频隐藏后它就出来了 */
+            display: none; 
         }
 
-        /* 音乐层 (隐藏) */
+        /* 音乐层 */
         .hidden { display: none !important; opacity: 0; }
 
-        /* === 树顶公司名称 === */
+        /* === 3. 树顶公司名称 (PSCPCB) === */
         #company-title {
             position: fixed;
-            /* 根据您的图片，星星大概在顶部 12%-15% 的位置，您可以微调这个数字 */
+            /* 【调整位置】根据您的远景图，星星大概在 13% 的高度 */
             top: 13%; 
             left: 50%;
             transform: translateX(-50%);
-            z-index: 150; 
-            color: #ffff00; /* 亮黄色，更显眼 */
-            font-family: "Arial Black", sans-serif;
-            font-size: 1.8em; /* 字体大小 */
+            z-index: 100; /* 在最上层 */
+            
+            color: #ffff00; /* 亮黄色 */
+            font-family: "Arial Black", sans-serif; /* 粗体 */
+            font-size: 2em; /* 字号 */
             letter-spacing: 2px;
-            text-shadow: 0 0 10px #ffff00, 0 0 20px #ff0000; /* 发光特效 */
-            opacity: 0; 
-            transition: opacity 2s ease-in;
+            
+            /* 发光特效：黄色光晕 + 红色外发光 */
+            text-shadow: 0 0 10px #ffff00, 0 0 20px #ff0000, 0 0 30px #ffff00;
+            
+            opacity: 0; /* 初始隐藏 */
+            transition: opacity 1s ease-in;
         }
+        /* 公司名显示的类 */
         #company-title.show { opacity: 1; }
 
-        /* === 人工造雪层 (覆盖在静态图上) === */
+        /* === 4. 人工造雪层 (覆盖在静态图上) === */
         #snow-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 50; display: none;
@@ -58,42 +65,53 @@
         }
         @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* === 祝福语区域 === */
+        /* === 5. 右侧祝福语区域 === */
         #greetings-container {
             position: fixed; 
-            top: 30%; /* 调整文字高度 */
-            right: 5%; 
-            width: 35%;
+            top: 25%; /* 文字整体高度 */
+            right: 5%; /* 靠右距离 */
+            width: 38%;
             z-index: 100; text-align: right; pointer-events: none;
         }
         .christmas-font { font-family: "Brush Script MT", "Comic Sans MS", cursive, serif; }
 
         .greeting-text { opacity: 0; }
 
-        /* 第一排：Merry Christmas */
+        /* 第一排：Merry Christmas (流光闪烁) */
         .greetings-title {
-            font-size: 2.5em; margin: 0 0 15px 0; font-weight: bold;
-            color: #ff3333; /* 红色 */
-            /* 流光闪烁动画 */
-            background: linear-gradient(to right, #ff3333 20%, #ffff00 50%, #ff3333 80%);
+            font-size: 2.8em; margin: 0 0 15px 0; font-weight: bold;
+            color: #ff3333; 
+            /* 渐变流光背景 */
+            background: linear-gradient(to right, #ff3333 30%, #fff 50%, #ff3333 70%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: fadeInMove 1.5s forwards, shimmer 3s linear infinite;
-            animation-delay: 0.5s;
+            
+            /* 动画：淡入 + 持续闪烁(shimmer) */
+            animation: fadeInMove 1s forwards, shimmer 5s infinite linear;
+            animation-delay: 0.2s;
         }
 
-        /* 第二排：祝福语 */
+        /* 第二排：祝福语 (呼吸灯效果) */
         .greetings-body {
-            font-size: 1.1em; line-height: 1.6; color: #f0f0f0;
+            font-size: 1.2em; line-height: 1.6; color: #f0f0f0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9); font-weight: normal;
-            animation: fadeInMove 2s forwards;
-            animation-delay: 2s;
+            
+            animation: fadeInMove 2s forwards, breathe 4s infinite ease-in-out;
+            animation-delay: 1.5s; /* 晚一点出来 */
         }
         
         .highlight-name { color: #00ffcc; font-weight: bold; }
 
-        @keyframes shimmer { to { background-position: 200% center; } }
+        /* 动画定义 */
+        @keyframes shimmer { 
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+        @keyframes breathe {
+            0%, 100% { text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            50% { text-shadow: 0 0 15px rgba(255,255,255,0.8); }
+        }
         @keyframes fadeInMove {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -147,7 +165,7 @@
 
 <script>
     // === 核心配置 ===
-    // 视频播放到第几秒切换成静态图？(根据视频调整)
+    // 视频播放到第几秒切换？(请根据您的视频精确调整)
     var triggerTime = 5; 
     // ================
 
@@ -162,32 +180,33 @@
     const urlParams = new URLSearchParams(window.location.search);
     const lang = urlParams.get('lang') || 'en';
 
-    // 1. 隐形音乐开关：用户点任何地方都触发音乐
+    // 1. 隐形音乐开关
     document.body.addEventListener('click', function() {
-        if (audio.paused) {
-            audio.play().catch(e => console.log("等待交互"));
-        }
-    }, { once: true }); // 只执行一次
+        if (audio.paused) audio.play();
+    }, { once: true });
     document.body.addEventListener('touchstart', function() {
-        if (audio.paused) {
-            audio.play().catch(e => console.log("等待交互"));
-        }
+        if (audio.paused) audio.play();
     }, { once: true });
 
-    // 2. 监听视频，触发切换
+    // 2. 监听视频进度
     video.addEventListener("timeupdate", function() {
         if (!hasTriggered && video.currentTime >= triggerTime) {
-            // A. 视频隐藏，显示静态完美背景
-            video.style.display = 'none'; // 隐藏视频
-            staticBg.style.display = 'block'; // 显示那张完美的图
             
-            // B. 显示其他元素
+            // --- 核心切换逻辑 ---
+            
+            // 1. 移除视频 (display: none 会让视频彻底消失)
+            video.style.display = 'none'; 
+            
+            // 2. 显示静态背景图
+            staticBg.style.display = 'block'; 
+            
+            // 3. 显示公司名、雪花、文字
             companyTitle.classList.add("show");
             snowOverlay.style.display = "block";
-            createSnow();
-            showText(lang);
+            createSnow(); // 开始下雪
+            showText(lang); // 显示文字
             
-            hasTriggered = true;
+            hasTriggered = true; // 锁定状态，不再重复执行
         }
     });
 
@@ -199,6 +218,7 @@
         target.classList.remove('hidden');
     }
 
+    // 造雪函数
     function createSnow() {
         const snowflakesCount = 60; 
         for (let i = 0; i < snowflakesCount; i++) {
@@ -213,6 +233,9 @@
             snowOverlay.appendChild(flake);
         }
     }
+    
+    // 确保视频加载
+    video.play().catch(e => console.log("等待交互播放"));
 </script>
 </body>
 </html>
