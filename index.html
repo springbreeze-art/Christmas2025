@@ -18,14 +18,13 @@
             position: absolute; top: 0; left: 0; z-index: 10; 
         }
         
-        /* 2. 静态背景层 (远景图) */
+        /* 2. 静态背景层 (必须保证 tree.jpg 存在) */
         #static-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* 引用您的 tree.jpg */
             background: url('tree.jpg') no-repeat center center; 
             background-size: cover; 
             z-index: 5; 
-            display: none; /* 初始隐藏 */
+            display: none; 
         }
 
         /* 音乐层 */
@@ -34,20 +33,15 @@
         /* === 3. 树顶公司名称 (PSCPCB) === */
         #company-title {
             position: fixed;
-            /* 位置调整：顶部 18% 左右 */
             top: 18%; 
             left: 50.5%; 
             transform: translateX(-50%);
             z-index: 100; 
-            
-            color: #ffff00; /* 亮黄色 */
+            color: #ffff00; 
             font-family: "Arial Black", sans-serif; 
             font-size: 1.8em; 
             letter-spacing: 2px;
-            
-            /* 发光特效 */
             text-shadow: 0 0 10px #ffff00, 0 0 20px #ff0000, 0 0 30px #ffff00;
-            
             opacity: 0; 
             transition: opacity 1s ease-in;
         }
@@ -76,7 +70,7 @@
 
         .greeting-text { opacity: 0; }
 
-        /* 第一排：Merry Christmas (流光效果) */
+        /* 第一排：Merry Christmas */
         .greetings-title {
             font-size: 2.5em; margin: 0 0 15px 0; font-weight: bold;
             color: #ff3333; 
@@ -88,7 +82,7 @@
             animation-delay: 0.2s;
         }
 
-        /* 第二排：祝福语 (呼吸效果) */
+        /* 第二排：祝福语 */
         .greetings-body {
             font-size: 1.1em; line-height: 1.6; color: #f0f0f0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9); font-weight: normal;
@@ -96,7 +90,6 @@
             animation-delay: 1.5s;
         }
         
-        /* 名字高亮颜色 */
         .highlight-name { color: #00ffcc; font-weight: bold; }
 
         @keyframes shimmer { 
@@ -127,7 +120,6 @@
         </audio>
 
         <div id="company-title">PSCPCB</div>
-        
         <div id="snow-overlay"></div>
 
         <div id="greetings-container" class="hidden">
@@ -165,7 +157,6 @@
 
 <script>
     // === 核心设置 ===
-    // 触发切换的时间 (秒)
     var triggerTime = 5; 
     // ================
 
@@ -177,10 +168,11 @@
     var snowOverlay = document.getElementById("snow-overlay");
     var hasTriggered = false;
 
+    // 【关键修改】这里改成了获取 'spring' 参数
     const urlParams = new URLSearchParams(window.location.search);
-    const lang = urlParams.get('lang') || 'en';
+    const lang = urlParams.get('spring') || 'en';
 
-    // 隐形音乐开关：触摸或点击屏幕任意位置播放音乐
+    // 隐形音乐开关
     function enableAudio() {
         if (audio.paused) {
             audio.play().catch(e => console.log("Waiting for interaction"));
@@ -191,27 +183,26 @@
 
     video.addEventListener("timeupdate", function() {
         if (!hasTriggered && video.currentTime >= triggerTime) {
-            
-            // 1. 隐藏视频
             video.style.display = 'none'; 
-            
-            // 2. 显示静态背景 tree.jpg
             staticBg.style.display = 'block'; 
-            
-            // 3. 启动所有特效
             companyTitle.classList.add("show");
             snowOverlay.style.display = "block";
             createSnow(); 
             showText(lang); 
-            
             hasTriggered = true; 
         }
     });
 
     function showText(langCode) {
+        // 先隐藏所有
         document.querySelectorAll('.greeting-wrapper').forEach(el => el.classList.add('hidden'));
+        
+        // 尝试找 text-ru, text-es, text-pt
         var target = document.getElementById('text-' + langCode);
+        
+        // 如果找不到（比如参数不对），就显示英文 text-en
         if (!target) target = document.getElementById('text-en');
+        
         container.classList.remove('hidden');
         target.classList.remove('hidden');
     }
