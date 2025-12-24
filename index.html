@@ -18,7 +18,7 @@
             position: absolute; top: 0; left: 0; z-index: 10; 
         }
         
-        /* 2. 静态背景层 (必须保证 tree.jpg 存在) */
+        /* 2. 静态背景层 (确保 GitHub 有 tree.jpg) */
         #static-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('tree.jpg') no-repeat center center; 
@@ -127,28 +127,28 @@
             <div id="text-en" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Spring</span> wishes you and your family health and happiness! May the coming New Year be filled with joy.
+                    <span class="highlight-name">Spring</span> wishes you and your family a season of joy and peace. May the coming year be filled with success and prosperity!
                 </div>
             </div>
 
             <div id="text-ru" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Леха</span> желает вам и вашей семье здоровья и счастья! Пусть наступающий Новый год будет радостным!
+                    <span class="highlight-name">Леха</span> от всей души желает вам здоровья и процветания! Пусть Новый год принесет успех во всех делах и тепло в ваш дом!
                 </div>
             </div>
 
             <div id="text-es" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Spring</span> le desea mucha salud y felicidad a usted y a su familia. ¡Que el Año Nuevo que se avecina esté lleno de alegría!
+                    <span class="highlight-name">Spring</span> le desea paz, amor y éxito para usted y su familia. ¡Que el próximo año esté lleno de nuevas oportunidades y prosperidad!
                 </div>
             </div>
 
             <div id="text-pt" class="greeting-wrapper hidden">
                 <div class="christmas-font greetings-title greeting-text">Merry Christmas!</div>
                 <div class="greetings-body greeting-text">
-                    <span class="highlight-name">Spring</span> deseja saúde e felicidade a você e à sua família! Que o Ano Novo que se aproxima seja repleto de alegria!
+                    <span class="highlight-name">Spring</span> deseja a você e sua família muita luz e boas energias! Que o Ano Novo traga grandes conquistas e vitórias!
                 </div>
             </div>
 
@@ -156,9 +156,9 @@
     </div>
 
 <script>
-    // === 核心设置 ===
+    // === 配置 ===
     var triggerTime = 5; 
-    // ================
+    // ============
 
     var video = document.getElementById("video1");
     var audio = document.getElementById("music1");
@@ -168,14 +168,13 @@
     var snowOverlay = document.getElementById("snow-overlay");
     var hasTriggered = false;
 
-    // 【关键修改】这里改成了获取 'spring' 参数
+    // 参数识别：?spring=ru / ?spring=es / ?spring=pt
     const urlParams = new URLSearchParams(window.location.search);
     const lang = urlParams.get('spring') || 'en';
 
-    // 隐形音乐开关
     function enableAudio() {
         if (audio.paused) {
-            audio.play().catch(e => console.log("Waiting for interaction"));
+            audio.play().catch(e => console.log("Waiting"));
         }
     }
     document.body.addEventListener('click', enableAudio, { once: true });
@@ -194,15 +193,9 @@
     });
 
     function showText(langCode) {
-        // 先隐藏所有
         document.querySelectorAll('.greeting-wrapper').forEach(el => el.classList.add('hidden'));
-        
-        // 尝试找 text-ru, text-es, text-pt
         var target = document.getElementById('text-' + langCode);
-        
-        // 如果找不到（比如参数不对），就显示英文 text-en
         if (!target) target = document.getElementById('text-en');
-        
         container.classList.remove('hidden');
         target.classList.remove('hidden');
     }
@@ -222,7 +215,7 @@
         }
     }
     
-    video.play().catch(e => console.log("等待交互播放"));
+    video.play().catch(e => console.log("Wait play"));
 </script>
 </body>
 </html>
